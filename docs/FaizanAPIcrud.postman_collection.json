@@ -1,0 +1,60 @@
+{
+	"info": {
+		"_postman_id": "adb3bb2b-4ab1-4920-a57f-8ce120297794",
+		"name": "FaizanAPIcrud",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28291523"
+	},
+	"item": [
+		{
+			"name": "/api/v1",
+			"item": [
+				{
+					"name": "Posts",
+					"item": [
+						{
+							"name": "Get Specific Post",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "Get All Posts",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "Create New Post",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "Edit a post",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "Delete a post",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
