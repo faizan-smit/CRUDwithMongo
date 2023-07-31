@@ -8,13 +8,13 @@ const db = client.db(dbName);
 const col = db.collection("posts");
 
 // not recommended at all - server should be stateless
-let posts = [
-    {
-        id: nanoid(),
-        title: "express()",
-        text: "By Sir Inzamam Malik"
-    }
-]
+// let posts = [
+//     {
+//         id: nanoid(),
+//         title: "express()",
+//         text: "By Sir Inzamam Malik"
+//     }
+// ]
 
 // POST    /api/v1/post
 router.post('/post', async (req, res, next) => {
@@ -106,7 +106,7 @@ router.get('/post/:postId', (req, res, next) => {
 })
 
 // PUT     /api/v1/post/:userId/:postId
-router.put('/post/edit/:postId', (req, res, next) => {
+router.put('/post/edit/:postId', async (req, res, next) => {
     console.log('This is edit! request', new Date());
     if (
         (req.body.title.trim().length == 0) || (req.body.text.trim().length == 0) ) {
@@ -119,37 +119,95 @@ router.put('/post/edit/:postId', (req, res, next) => {
         } `);
         return;
     }
-    posts.forEach(post => {
+    // posts.forEach(post => {
 
-        if(post.id === req.params.postId){
-            post.title = req.body.title;
-            post.text = req.body.text;
+    //     if(post.id === req.params.postId){
+    //         post.title = req.body.title;
+    //         post.text = req.body.text;
             
-            return
-        }
-    
-    });
+    //         return
+    //     }
 
-    res.send('Post Edited successfully');
+    // });
+
+ try{
+            await client.connect();
+            console.log("Connected Atlas");
+            const filter = { id: req.params.postId };
+            const updateDoc = {
+
+                $set: {
+        
+                title: req.body.title,
+                text: req.body.text
+        
+                },
+        
+            };
+            const result = await col.updateOne(filter, updateDoc);
+
+            res.send('Post Edited successfully');
+            await client.close();
+            console.log("Disconnected Atlas");
+    }
+    catch (err){
+
+        console.log(err);
+
+
+    }
 })
 // DELETE  /api/v1/post/:userId/:postId
-router.delete('/post/delete/:postId', (req, res, next) => {
+router.delete('/post/delete/:postId', async (req, res, next) => {
     console.log('This is delete! request', new Date());
 
-    posts.forEach((post, index) => {
+    // posts.forEach((post, index) => {
 
-        if (post.id === req.params.postId) {
+    //     if (post.id === req.params.postId) {
 
-            posts.splice(index, 1);
+    //         posts.splice(index, 1);
 
-            return
+    //         return
 
-        }
+    //     }
 
-    })
+    // })
 
-    
+    try{
+
+        await client.connect();
+        console.log("Connected Atlas");
+
+        const query = { id: req.params.postId};
+
+        const result = await col.deleteOne(query);
+
+        if (result.deletedCount === 1) {
+
+            console.log("Successfully deleted one document.");
+      
+          } else {
+      
+            console.log("No documents matched the query. Deleted 0 documents.");
+      
+            }
+
+
+        await client.close();
+        console.log("Disconnected Atlas");
+
     res.send('Post deleted successfully');
+
+
+    }
+
+
+    catch (err) {
+
+        res.send('Error Not Found: ' + err.message);
+    }
+    
+    
 })
 
 export default router

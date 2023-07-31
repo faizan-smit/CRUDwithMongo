@@ -136,6 +136,7 @@ let edit = (event)=>{
     let saveButton = document.createElement(`button`);
     saveButton.type = 'submit';
     saveButton.innerHTML = 'Save';
+    saveButton.classList.add('save-btn');
     saveButton.setAttribute('referer', theRef)
     saveButton.addEventListener('click', save);
 
@@ -162,6 +163,7 @@ let save = (event)=> {
     .then( (response)=>{
 
         console.log("done");
+        console.log(response);
         getAllPost();
 
     })

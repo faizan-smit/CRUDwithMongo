@@ -150,3 +150,17 @@
     cursor: pointer;
 
 }
+
+.save-btn{
+
+    width: 100px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 1);
+    border: 2px solid #00cc00;
+    color: #00cc00;
+    margin-right: 10px;
+    border-radius: 1rem;
+    cursor: pointer;
+    margin-top: 20px;
+
+}
