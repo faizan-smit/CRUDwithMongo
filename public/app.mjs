@@ -48,12 +48,12 @@ window.getAllPost = function () {
             let editButton = document.createElement("button");
             editButton.innerHTML = `Edit Post`;
             editButton.classList.add("edit-button");
-            editButton.setAttribute("ref", data.id);
+            editButton.setAttribute("ref", data._id);
             editButton.addEventListener("click", edit);
             let deleteButton = document.createElement("button");
             deleteButton.innerHTML = `Delete`;
             deleteButton.classList.add("delete-button");
-            deleteButton.setAttribute("ref", data.id);
+            deleteButton.setAttribute("ref", data._id);
             deleteButton.addEventListener("click", deletePost);
             let buttonsDiv = document.createElement("div");
             postCardTitle.appendChild(titleText);

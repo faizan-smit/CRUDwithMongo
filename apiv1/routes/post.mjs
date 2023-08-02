@@ -2,6 +2,7 @@
 import express from 'express';
 import { nanoid } from 'nanoid'
 import {client} from './../../mongodb.mjs'
+import { ObjectId } from 'mongodb';
 let router = express.Router();
 const dbName = "CRUD-DB";
 const db = client.db(dbName);
@@ -61,9 +62,10 @@ router.post('/post', async (req, res, next) => {
         }
 
 
-        catch{
+        catch(err){
 
             console.log('Error in posting');
+            res.send('Error Not Found: ' + err.message);
             
              }
 })
@@ -83,26 +85,39 @@ router.get('/posts', async(req, res, next) => {
     }
     catch{
 
-        console.log('Error in posting');
+        console.log('Error in getting posts');
+        res.status(404).send("Error in getting post")
         
          }
 })
 
 // GET     /api/v1/post/:postId
-router.get('/post/:postId', (req, res, next) => {
+router.get('/post/:postId', async(req, res, next) => {
     console.log('this is specific post request!', new Date());
 
     if (!req.params.postId) {
         res.status(403).send(`post id must be a valid number, no alphabet is allowed in post id`)
     }
 
-    for (let i = 0; i < posts.length; i++) {
-        if (posts[i].id === req.params.postId) {
-            res.send(posts[i]);
-            return;
-        }
+    try{
+        await client.connect();
+        const filter = { _id: new ObjectId(req.params.postId) };
+        const myDoc = await col.findOne(filter);
+        res.send(myDoc);
+        console.log("Found: ", myDoc, " with id: ", req.params.postId);
+        await client.close();
+
+
     }
-    res.send('Post not found with ID ' + req.params.postId);
+    catch(err){
+
+        console.log('Error in getting posts');
+        res.status(404).send("Error in getting post")
+        await client.close();
+
+    }
+
+    
 })
 
 // PUT     /api/v1/post/:userId/:postId
@@ -133,7 +148,7 @@ router.put('/post/edit/:postId', async (req, res, next) => {
  try{
             await client.connect();
             console.log("Connected Atlas");
-            const filter = { id: req.params.postId };
+            const filter = { _id: new ObjectId(req.params.postId) };
             const updateDoc = {
 
                 $set: {
@@ -153,6 +168,7 @@ router.put('/post/edit/:postId', async (req, res, next) => {
     catch (err){
 
         console.log(err);
+        res.send('Error Not Found: ' + err);
 
 
     }
@@ -178,7 +194,7 @@ router.delete('/post/delete/:postId', async (req, res, next) => {
         await client.connect();
         console.log("Connected Atlas");
 
-        const query = { id: req.params.postId};
+        const query = { _id: new ObjectId(req.params.postId)};
 
         const result = await col.deleteOne(query);
 
